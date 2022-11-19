@@ -1,0 +1,36 @@
+package by.urbel.questionnaireportal.entity;
+
+import by.urbel.questionnaireportal.entity.enums.FieldType;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
+import javax.persistence.*;
+import java.util.List;
+
+@TypeDefs({
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+})
+@Entity
+@Table(name = "fields")
+@Getter
+@Setter
+public class Field {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
+    private String label;
+    @Enumerated(EnumType.STRING)
+    private FieldType type;
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "json")
+    private List<String> options;
+    @Column(nullable = false)
+    private Boolean isRequired;
+    @Column(nullable = false)
+    private Boolean isActive;
+}

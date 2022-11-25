@@ -11,10 +11,10 @@ import by.urbel.questionnaireportal.repository.QuestionnaireRepository;
 import by.urbel.questionnaireportal.service.QuestionnaireAnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -27,14 +27,17 @@ public class QuestionnaireAnswerServiceImpl implements QuestionnaireAnswerServic
 
     @Override
     public void create(QuestionnaireAnswerDto dto) {
+        if (dto.getId() != null && questionnaireAnswerRepository.existsById(dto.getId())) {
+            throw new EntityExistsException(String.format("Answer %d on questionnaire already exists.", dto.getId()));
+        }
         QuestionnaireAnswer questionnaireAnswer = mapper.dtoToQuestionnaireAnswer(dto);
         Questionnaire questionnaire = questionnaireRepository.findById(dto.getQuestionnaireId()).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Questionnaire not found.");
+            throw new EntityNotFoundException(String.format("Questionnaire %d not found.", dto.getQuestionnaireId()));
         });
         questionnaireAnswer.getFieldAnswers().forEach(fieldAnswer -> {
             fieldAnswer.setQuestionnaireAnswer(questionnaireAnswer);
             Field field = fieldRepository.findById(fieldAnswer.getField().getId()).orElseThrow(() -> {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Field not found.");
+                throw new EntityNotFoundException(String.format("Field %d not found.", fieldAnswer.getField().getId()));
             });
             fieldAnswer.setField(field);
         });

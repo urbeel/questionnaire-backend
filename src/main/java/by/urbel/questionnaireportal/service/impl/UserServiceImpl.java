@@ -7,12 +7,12 @@ import by.urbel.questionnaireportal.mapper.UserMapper;
 import by.urbel.questionnaireportal.repository.UserRepository;
 import by.urbel.questionnaireportal.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public void update(Long id, UserDto userDto) {
         User user = userRepository.findById(id).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
+            throw new EntityNotFoundException(String.format("User %d not found.", id));
         });
         userMapper.updateExisting(userDto, user);
         user.setId(id);

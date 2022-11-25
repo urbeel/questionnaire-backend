@@ -1,4 +1,12 @@
 package by.urbel.questionnaireportal.dto;
 
-public record AuthResponse(String jwtToken) {
+import lombok.*;
+
+@Builder
+@Getter
+public class AuthResponse {
+    private String jwtToken;
+    private String fullName;
+    private Long userId;
+    private Long questionnaireId;
 }

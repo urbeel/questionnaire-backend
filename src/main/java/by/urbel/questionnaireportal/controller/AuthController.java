@@ -35,7 +35,7 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public void logout(){
+    public void logout() {
         authService.logout();
     }
 }

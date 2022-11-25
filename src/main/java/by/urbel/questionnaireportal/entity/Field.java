@@ -2,8 +2,7 @@ package by.urbel.questionnaireportal.entity;
 
 import by.urbel.questionnaireportal.entity.enums.FieldType;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -16,8 +15,7 @@ import java.util.List;
 })
 @Entity
 @Table(name = "fields")
-@Getter
-@Setter
+@Data
 public class Field {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +31,6 @@ public class Field {
     private Boolean isRequired;
     @Column(nullable = false)
     private Boolean isActive;
+    @ManyToOne(optional = false)
+    private Questionnaire questionnaire;
 }

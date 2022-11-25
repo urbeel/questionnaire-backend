@@ -3,18 +3,21 @@ package by.urbel.questionnaireportal.service.impl;
 import by.urbel.questionnaireportal.dto.AuthResponse;
 import by.urbel.questionnaireportal.dto.SignInRequest;
 import by.urbel.questionnaireportal.dto.SignUpRequest;
+import by.urbel.questionnaireportal.entity.Questionnaire;
 import by.urbel.questionnaireportal.entity.User;
 import by.urbel.questionnaireportal.entity.enums.UserRole;
 import by.urbel.questionnaireportal.mapper.UserMapper;
 import by.urbel.questionnaireportal.repository.UserRepository;
 import by.urbel.questionnaireportal.security.JwtTokenUtil;
 import by.urbel.questionnaireportal.service.AuthService;
+import by.urbel.questionnaireportal.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
@@ -34,14 +38,26 @@ public class AuthServiceImpl implements AuthService {
         checkExistence(user);
         user.setRole(UserRole.ROLE_USER);
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setAuthor(user);
+        user.setQuestionnaire(questionnaire);
         userRepository.save(user);
+        mailService.sendNotificationOfSuccessfulRegistration(user.getEmail());
     }
 
     @Override
     public AuthResponse login(SignInRequest signInRequest) {
+        User user = userRepository.findByEmail(signInRequest.getEmail()).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
-        return new AuthResponse(jwtTokenUtil.generateAccessToken(signInRequest.getEmail()));
+        String fullName = user.getFirstname() + " " + user.getLastname();
+        return AuthResponse.builder()
+                .jwtToken(jwtTokenUtil.generateAccessToken(signInRequest.getEmail()))
+                .fullName(fullName)
+                .questionnaireId(user.getQuestionnaire().getId())
+                .userId(user.getId())
+                .build();
     }
 
     public void logout() {

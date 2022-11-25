@@ -1,0 +1,38 @@
+package by.urbel.questionnaireportal.service.impl;
+
+
+import by.urbel.questionnaireportal.dto.UserDto;
+import by.urbel.questionnaireportal.entity.User;
+import by.urbel.questionnaireportal.mapper.UserMapper;
+import by.urbel.questionnaireportal.repository.UserRepository;
+import by.urbel.questionnaireportal.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserDetailsService, UserService {
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    }
+
+    @Override
+    public void update(Long id, UserDto userDto) {
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
+        });
+        userMapper.updateExisting(userDto, user);
+        user.setId(id);
+        userRepository.save(user);
+    }
+}

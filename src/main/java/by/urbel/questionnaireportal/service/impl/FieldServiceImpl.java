@@ -9,11 +9,10 @@ import by.urbel.questionnaireportal.service.FieldService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -24,13 +23,13 @@ public class FieldServiceImpl implements FieldService {
     private final FieldMapper fieldMapper;
 
     @Override
-    @Transactional
     public void create(FieldDto fieldDto) {
         Field field = fieldMapper.dtoToField(fieldDto);
-
+        if (fieldDto.getId() != null && fieldRepository.existsById(fieldDto.getId())) {
+            throw new EntityExistsException(String.format("Field %d already exists.", fieldDto.getId()));
+        }
         field.setQuestionnaire(questionnaireRepository.findById(fieldDto.getQuestionnaireId()).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Questionnaire %d not found", fieldDto.getId()));
+            throw new EntityNotFoundException(String.format("Questionnaire %d not found.", fieldDto.getQuestionnaireId()));
         }));
         fieldRepository.save(field);
     }
@@ -53,7 +52,7 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public void update(Long id, FieldDto fieldDto) {
         Field field = fieldRepository.findById(id).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Field %d not found", id));
+            throw new EntityNotFoundException(String.format("Field %d not found.", id));
         });
         fieldMapper.updateExisting(fieldDto, field);
         field.setId(id);
@@ -65,7 +64,7 @@ public class FieldServiceImpl implements FieldService {
         if (fieldRepository.existsById(id)) {
             fieldRepository.deleteById(id);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Filed %d not found", id));
+            throw new EntityNotFoundException(String.format("Field %d not found.", id));
         }
     }
 

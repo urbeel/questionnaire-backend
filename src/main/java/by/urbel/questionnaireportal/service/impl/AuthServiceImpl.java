@@ -11,8 +11,9 @@ import by.urbel.questionnaireportal.repository.UserRepository;
 import by.urbel.questionnaireportal.security.JwtTokenUtil;
 import by.urbel.questionnaireportal.service.AuthService;
 import by.urbel.questionnaireportal.service.MailService;
+import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
+import by.urbel.questionnaireportal.service.exceptions.PasswordConfirmationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -20,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(SignInRequest signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail()).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
+                new UsernameNotFoundException("Incorrect email or password."));
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
         String fullName = user.getFirstname() + " " + user.getLastname();
@@ -67,13 +67,13 @@ public class AuthServiceImpl implements AuthService {
 
     private void checkExistence(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is already used.");
+            throw new EmailAlreadyUsedException("Email is already used.");
         }
     }
 
     private void checkPasswordsEquality(SignUpRequest signUpRequest) {
         if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password and confirm password is not equal.");
+            throw new PasswordConfirmationException("Password and confirm password does not match.");
         }
     }
 }

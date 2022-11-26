@@ -14,6 +14,6 @@ public interface FieldAnswerMapper {
     FieldAnswerDto fieldAnswerToDto(FieldAnswer field);
 
     @InheritInverseConfiguration
-    @Mapping(target = "value", conditionExpression = "java(!field.getValue().isEmpty())")
+    @Mapping(target = "value", conditionExpression = "java(field.getValue()!=null && !field.getValue().isEmpty())")
     FieldAnswer dtoToFieldAnswer(FieldAnswerDto field);
 }

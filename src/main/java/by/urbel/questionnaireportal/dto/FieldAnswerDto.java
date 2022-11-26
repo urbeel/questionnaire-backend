@@ -13,7 +13,6 @@ public class FieldAnswerDto {
     private Long id;
     @NotNull(message = "Field id cannot be null.")
     private Long fieldId;
-    @NotNull(message = "Id of questionnaire answer cannot be null.")
     private Long questionnaireAnswerId;
     private String value;
 }

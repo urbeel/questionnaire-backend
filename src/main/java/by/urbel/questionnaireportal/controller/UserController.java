@@ -14,7 +14,7 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("/{userId}")
-    @PreAuthorize("#userId==principal.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #userId==principal.id")
     public void updateUser(@PathVariable Long userId, @Validated @RequestBody UserDto userDto) {
         userService.update(userId, userDto);
     }

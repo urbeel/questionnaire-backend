@@ -1,6 +1,7 @@
 package by.urbel.questionnaireportal.service;
 
 import by.urbel.questionnaireportal.dto.FieldDto;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface FieldService {
 
     void update(Long id, FieldDto fieldDto);
 
-    void delete(Long id);
+    void delete(Long id, Authentication authentication);
 
     long getSize(Long questionnaireId);
 }

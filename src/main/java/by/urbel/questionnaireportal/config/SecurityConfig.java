@@ -4,6 +4,7 @@ import by.urbel.questionnaireportal.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -29,8 +30,13 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.cors().and().authorizeRequests()
-                .antMatchers("/api/fields").authenticated()
+        http.cors().and()
+                .authorizeRequests()
+                .antMatchers("/api/fields/active", "/api/auth/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/responses").permitAll()
+                .antMatchers("/api/fields", "/api/fields/*").hasAuthority("ROLE_USER")
+                .antMatchers("/api/responses", "/api/responses/*").hasAuthority("ROLE_USER")
+                .antMatchers("/api/users/*").hasAuthority("ROLE_USER")
                 .anyRequest().permitAll();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

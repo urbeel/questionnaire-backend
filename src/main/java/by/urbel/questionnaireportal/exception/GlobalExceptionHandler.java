@@ -1,5 +1,6 @@
 package by.urbel.questionnaireportal.exception;
 
+import by.urbel.questionnaireportal.service.exceptions.AccessDeniedException;
 import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
 import by.urbel.questionnaireportal.service.exceptions.PasswordConfirmationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -62,5 +63,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         return new Response(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Response handleAccessDeniedException(AccessDeniedException e) {
+        return new Response(HttpStatus.FORBIDDEN, e.getMessage());
     }
 }

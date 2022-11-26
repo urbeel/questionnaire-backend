@@ -4,6 +4,7 @@ import by.urbel.questionnaireportal.dto.FieldDto;
 import by.urbel.questionnaireportal.service.FieldService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +17,13 @@ public class FieldsController {
     private final FieldService fieldService;
 
     @PostMapping
-    public void save(@Validated(FieldDto.New.class) @RequestBody FieldDto field) {
-        fieldService.create(field);
+    @PreAuthorize("hasAuthority('ROLE_USER') and #fieldDto.questionnaireId==principal.questionnaire.id")
+    public void save(@Validated(FieldDto.New.class) @RequestBody FieldDto fieldDto) {
+        fieldService.create(fieldDto);
     }
 
     @GetMapping()
+    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
     public List<FieldDto> readAllByQuestionnaireId(@RequestParam(required = false) Integer page,
                                                    @RequestParam(required = false) Integer size,
                                                    @RequestParam Long questionnaireId) {
@@ -33,17 +36,19 @@ public class FieldsController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #fieldDto.questionnaireId==principal.questionnaire.id")
     public void update(@PathVariable Long id, @Validated(FieldDto.Update.class) @RequestBody FieldDto fieldDto) {
         fieldService.update(id, fieldDto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        fieldService.delete(id);
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public void delete(@PathVariable Long id, Authentication authentication) {
+        fieldService.delete(id, authentication);
     }
 
     @GetMapping("/size")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
     public long getFieldsSize(@RequestParam Long questionnaireId) {
         return fieldService.getSize(questionnaireId);
     }

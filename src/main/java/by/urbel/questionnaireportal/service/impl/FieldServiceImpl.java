@@ -2,13 +2,16 @@ package by.urbel.questionnaireportal.service.impl;
 
 import by.urbel.questionnaireportal.dto.FieldDto;
 import by.urbel.questionnaireportal.entity.Field;
+import by.urbel.questionnaireportal.entity.User;
 import by.urbel.questionnaireportal.mapper.FieldMapper;
 import by.urbel.questionnaireportal.repository.FieldRepository;
 import by.urbel.questionnaireportal.repository.QuestionnaireRepository;
 import by.urbel.questionnaireportal.service.FieldService;
+import by.urbel.questionnaireportal.service.exceptions.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
@@ -60,7 +63,11 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id, Authentication auth) {
+        User user = (User) auth.getPrincipal();
+        if (!fieldRepository.existsByIdAndQuestionnaire(id, user.getQuestionnaire())) {
+            throw new AccessDeniedException("No permission to delete this field.");
+        }
         if (fieldRepository.existsById(id)) {
             fieldRepository.deleteById(id);
         } else {

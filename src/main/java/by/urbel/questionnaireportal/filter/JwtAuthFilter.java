@@ -4,6 +4,7 @@ import by.urbel.questionnaireportal.security.JwtTokenUtil;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String requestUrl = request.getRequestURL().toString();
-        if (isNoAuthUrl(requestUrl)) {
+        if (isNoAuthUrl(requestUrl) || isCreateAnswerRequest(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -57,11 +58,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public boolean isNoAuthUrl(String requestUrl) {
-        return requestUrl.endsWith("/login")
-                || requestUrl.endsWith("/signup")
+    private boolean isNoAuthUrl(String requestUrl) {
+        return requestUrl.contains("/auth/")
                 || requestUrl.endsWith("/active")
-                || requestUrl.endsWith("/responses")
                 || requestUrl.contains("/ws/");
+    }
+
+    private boolean isCreateAnswerRequest(HttpServletRequest request) {
+        return request.getRequestURL().toString().endsWith("/responses")
+                && request.getMethod().equalsIgnoreCase(HttpMethod.POST.name());
+
     }
 }

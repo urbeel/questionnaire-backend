@@ -1,6 +1,7 @@
 package by.urbel.questionnaireportal.service.impl;
 
 import by.urbel.questionnaireportal.dto.AuthResponse;
+import by.urbel.questionnaireportal.dto.ChangePasswordRequest;
 import by.urbel.questionnaireportal.dto.SignInRequest;
 import by.urbel.questionnaireportal.dto.SignUpRequest;
 import by.urbel.questionnaireportal.entity.Questionnaire;
@@ -11,6 +12,7 @@ import by.urbel.questionnaireportal.repository.UserRepository;
 import by.urbel.questionnaireportal.security.JwtTokenUtil;
 import by.urbel.questionnaireportal.service.AuthService;
 import by.urbel.questionnaireportal.service.MailService;
+import by.urbel.questionnaireportal.service.exceptions.ChangePasswordException;
 import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
 import by.urbel.questionnaireportal.service.exceptions.PasswordConfirmationException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtil jwtTokenUtil;
 
     public void register(SignUpRequest signUpRequest) {
-        checkPasswordsEquality(signUpRequest);
+        checkPasswordsEquality(signUpRequest.getPassword(), signUpRequest.getConfirmPassword());
         User user = userMapper.signUpRequestToUser(signUpRequest);
         checkExistence(user);
         user.setRole(UserRole.ROLE_USER);
@@ -58,14 +62,31 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Override
+    public void changePassword(ChangePasswordRequest dto) {
+        checkPasswordsEquality(dto.getPassword(), dto.getConfirmPassword());
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> {
+            throw new EntityNotFoundException(String.format("User %d not found.", dto.getUserId()));
+        });
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            throw new ChangePasswordException("Incorrect old password.");
+        }
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            userRepository.save(user);
+        } else {
+            throw new ChangePasswordException("New and old passwords must be different.");
+        }
+    }
+
     private void checkExistence(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyUsedException("Email is already used.");
         }
     }
 
-    private void checkPasswordsEquality(SignUpRequest signUpRequest) {
-        if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
+    private void checkPasswordsEquality(String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
             throw new PasswordConfirmationException("Password and confirm password does not match.");
         }
     }

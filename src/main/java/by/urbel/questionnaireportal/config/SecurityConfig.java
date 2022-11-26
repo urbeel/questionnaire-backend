@@ -32,11 +32,12 @@ public class SecurityConfig implements WebMvcConfigurer {
         http.csrf().disable();
         http.cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/fields/active", "/api/auth/*").permitAll()
+                .antMatchers("/api/fields/active", "/api/auth/signup", "/api/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/responses").permitAll()
                 .antMatchers("/api/fields", "/api/fields/*").hasAuthority("ROLE_USER")
                 .antMatchers("/api/responses", "/api/responses/*").hasAuthority("ROLE_USER")
                 .antMatchers("/api/users/*").hasAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.PATCH,"/api/auth/password").hasAuthority("ROLE_USER")
                 .anyRequest().permitAll();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

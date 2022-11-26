@@ -1,6 +1,7 @@
 package by.urbel.questionnaireportal.exception;
 
 import by.urbel.questionnaireportal.service.exceptions.AccessDeniedException;
+import by.urbel.questionnaireportal.service.exceptions.ChangePasswordException;
 import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
 import by.urbel.questionnaireportal.service.exceptions.PasswordConfirmationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -69,5 +70,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Response handleAccessDeniedException(AccessDeniedException e) {
         return new Response(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
+    @ExceptionHandler(ChangePasswordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response handleChangePasswordException(ChangePasswordException e) {
+        return new Response(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }

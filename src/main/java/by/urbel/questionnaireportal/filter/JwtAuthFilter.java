@@ -59,7 +59,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private boolean isNoAuthUrl(String requestUrl) {
-        return requestUrl.contains("/auth/")
+        return requestUrl.endsWith("/signup")
+                || requestUrl.endsWith("/login")
                 || requestUrl.endsWith("/active")
                 || requestUrl.contains("/ws/");
     }

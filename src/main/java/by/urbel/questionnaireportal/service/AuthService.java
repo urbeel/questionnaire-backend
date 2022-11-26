@@ -8,6 +8,4 @@ public interface AuthService {
     void register(SignUpRequest signUpRequest);
 
     AuthResponse login(SignInRequest signInRequest);
-
-    void logout();
 }

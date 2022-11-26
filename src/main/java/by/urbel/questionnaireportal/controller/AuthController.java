@@ -24,9 +24,4 @@ public class AuthController {
     public AuthResponse authenticate(@Valid @RequestBody SignInRequest signInRequest) {
         return authService.login(signInRequest);
     }
-
-    @GetMapping("/logout")
-    public void logout() {
-        authService.logout();
-    }
 }

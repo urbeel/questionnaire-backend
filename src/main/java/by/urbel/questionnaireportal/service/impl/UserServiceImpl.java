@@ -6,6 +6,7 @@ import by.urbel.questionnaireportal.entity.User;
 import by.urbel.questionnaireportal.mapper.UserMapper;
 import by.urbel.questionnaireportal.repository.UserRepository;
 import by.urbel.questionnaireportal.service.UserService;
+import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,6 +32,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = userRepository.findById(id).orElseThrow(() -> {
             throw new EntityNotFoundException(String.format("User %d not found.", id));
         });
+        if (!user.getEmail().equals(userDto.getEmail()) && userRepository.existsByEmail(userDto.getEmail())) {
+            throw new EmailAlreadyUsedException("Email is already used for another user.");
+        }
         userMapper.updateExisting(userDto, user);
         user.setId(id);
         userRepository.save(user);

@@ -4,6 +4,7 @@ import by.urbel.questionnaireportal.dto.FieldDto;
 import by.urbel.questionnaireportal.service.FieldService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class FieldsController {
     private final FieldService fieldService;
 
     @PostMapping
-    public void save(@RequestBody FieldDto field) {
+    public void save(@Validated(FieldDto.New.class) @RequestBody FieldDto field) {
         fieldService.create(field);
     }
 
@@ -33,7 +34,7 @@ public class FieldsController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public void update(@PathVariable Long id, @RequestBody FieldDto fieldDto) {
+    public void update(@PathVariable Long id, @Validated(FieldDto.Update.class) @RequestBody FieldDto fieldDto) {
         fieldService.update(id, fieldDto);
     }
 

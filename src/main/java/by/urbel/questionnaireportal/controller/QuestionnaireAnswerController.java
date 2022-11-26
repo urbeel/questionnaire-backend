@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,7 +17,7 @@ public class QuestionnaireAnswerController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @PostMapping
-    public void createAnswer(@RequestBody QuestionnaireAnswerDto dto) {
+    public void createAnswer(@RequestBody @Valid QuestionnaireAnswerDto dto) {
         questionnaireAnswerService.create(dto);
         messagingTemplate.convertAndSend("/topic/responses", "Update responses");
     }

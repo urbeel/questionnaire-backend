@@ -48,12 +48,12 @@ public class QuestionnaireAnswerServiceImpl implements QuestionnaireAnswerServic
     @Override
     public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(Long questionnaireId, Integer page, Integer size) {
         List<QuestionnaireAnswer> questionnaireAnswers =
-                questionnaireAnswerRepository.findAllByQuestionnaire_Id(questionnaireId, PageRequest.of(page, size));
+                questionnaireAnswerRepository.findAllByQuestionnaireId(questionnaireId, PageRequest.of(page, size));
         return mapper.questionnaireAnswersToDto(questionnaireAnswers);
     }
 
     @Override
     public Long getSize(Long questionnaireId) {
-        return questionnaireAnswerRepository.countAllByQuestionnaire_Id(questionnaireId);
+        return questionnaireAnswerRepository.countAllByQuestionnaireId(questionnaireId);
     }
 }

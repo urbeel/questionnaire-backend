@@ -40,16 +40,16 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public List<FieldDto> readAllByQuestionnaireId(Long questionnaireId, Integer page, Integer size) {
         if (page == null || size == null) {
-            return fieldMapper.fieldsToDto(fieldRepository.findAllByQuestionnaire_Id(questionnaireId));
+            return fieldMapper.fieldsToDto(fieldRepository.findAllByQuestionnaireId(questionnaireId));
         }
-        Page<Field> fieldPage = fieldRepository.findAllByQuestionnaire_Id(questionnaireId, PageRequest.of(page, size));
+        Page<Field> fieldPage = fieldRepository.findAllByQuestionnaireId(questionnaireId, PageRequest.of(page, size));
         return fieldMapper.fieldsToDto(fieldPage.toList());
     }
 
     @Override
     public List<FieldDto> readAllActive(Long questionnaireId) {
         return fieldMapper.fieldsToDto(fieldRepository.
-                findAllByQuestionnaire_IdAndIsActive(questionnaireId, true));
+                findAllByQuestionnaireIdAndIsActive(questionnaireId, true));
     }
 
     @Override
@@ -77,6 +77,6 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public long getSize(Long questionnaireId) {
-        return fieldRepository.countAllByQuestionnaire_Id(questionnaireId);
+        return fieldRepository.countAllByQuestionnaireId(questionnaireId);
     }
 }

@@ -11,13 +11,13 @@ import java.util.List;
 
 @Repository
 public interface FieldRepository extends JpaRepository<Field, Long> {
-    Page<Field> findAllByQuestionnaire_Id(Long questionnaireId, PageRequest pageRequest);
+    Page<Field> findAllByQuestionnaireId(Long questionnaireId, PageRequest pageRequest);
 
-    List<Field> findAllByQuestionnaire_Id(Long questionnaireId);
+    List<Field> findAllByQuestionnaireId(Long questionnaireId);
 
-    List<Field> findAllByQuestionnaire_IdAndIsActive(Long questionnaireId, Boolean isActive);
+    List<Field> findAllByQuestionnaireIdAndIsActive(Long questionnaireId, Boolean isActive);
 
-    Long countAllByQuestionnaire_Id(Long questionnaireId);
+    Long countAllByQuestionnaireId(Long questionnaireId);
 
     Boolean existsByIdAndQuestionnaire(Long id, Questionnaire questionnaire);
 }

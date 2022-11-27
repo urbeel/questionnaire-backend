@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface QuestionnaireAnswerRepository extends JpaRepository<QuestionnaireAnswer, Long> {
-    List<QuestionnaireAnswer> findAllByQuestionnaire_Id(Long questionnaireId, PageRequest pageRequest);
+    List<QuestionnaireAnswer> findAllByQuestionnaireId(Long questionnaireId, PageRequest pageRequest);
 
-    Long countAllByQuestionnaire_Id(Long questionnaireId);
+    Long countAllByQuestionnaireId(Long questionnaireId);
 }

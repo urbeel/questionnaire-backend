@@ -34,6 +34,15 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
 
+    private static final String REGISTRATION_MESSAGE =
+            "Thank you for registration! Now you can create your custom questionnaire.";
+    private static final String CHANGE_PASSWORD_MESSAGE =
+            "Your password was changed.";
+    private static final String REGISTRATION_SUBJECT =
+            "Successful registration";
+    private static final String CHANGE_PASSWORD_SUBJECT =
+            "Changing your account password";
+
     public void register(SignUpRequest signUpRequest) {
         checkPasswordsEquality(signUpRequest.getPassword(), signUpRequest.getConfirmPassword());
         User user = userMapper.signUpRequestToUser(signUpRequest);
@@ -44,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         questionnaire.setAuthor(user);
         user.setQuestionnaire(questionnaire);
         userRepository.save(user);
-        mailService.sendNotificationOfSuccessfulRegistration(user.getEmail());
+        mailService.sendMessage(user.getEmail(), REGISTRATION_SUBJECT, REGISTRATION_MESSAGE);
     }
 
     @Override
@@ -74,6 +83,7 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
             userRepository.save(user);
+            mailService.sendMessage(user.getEmail(), CHANGE_PASSWORD_SUBJECT, CHANGE_PASSWORD_MESSAGE);
         } else {
             throw new ChangePasswordException("New and old passwords must be different.");
         }

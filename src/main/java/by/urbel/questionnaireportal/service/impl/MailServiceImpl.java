@@ -15,12 +15,12 @@ public class MailServiceImpl implements MailService {
     private String fromEmail;
 
     @Override
-    public void sendNotificationOfSuccessfulRegistration(String toEmail) {
+    public void sendMessage(String toEmail, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
         message.setTo(toEmail);
-        message.setSubject("Successful registration");
-        message.setText("Thank you for registration! Now you can create your custom questionnaire)");
+        message.setSubject(subject);
+        message.setText(text);
         mailSender.send(message);
     }
 }

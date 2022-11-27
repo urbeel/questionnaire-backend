@@ -1,5 +1,7 @@
 package by.urbel.questionnaireportal.dto;
 
+import by.urbel.questionnaireportal.customvalidation.ValueOfEnum;
+import by.urbel.questionnaireportal.entity.enums.FieldType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +21,7 @@ public class FieldDto {
     private String label;
     @NotBlank(groups = {New.class, Update.class}, message = "Type cannot be empty.")
     @Size(groups = {New.class, Update.class}, max = 255, message = "Max length of type is 255 characters.")
+    @ValueOfEnum(groups = {New.class, Update.class}, enumClass = FieldType.class)
     private String type;
     private List<String> options;
     @NotNull(groups = {New.class, Update.class}, message = "IsRequired cannot be null.")

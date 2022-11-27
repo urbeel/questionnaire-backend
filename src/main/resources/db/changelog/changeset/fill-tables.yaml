@@ -1,0 +1,125 @@
+databaseChangeLog:
+  - changeSet:
+      id: fill-users
+      author: Nikita Urbel
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: email
+                  value: email@gmail.com
+              - column:
+                  name: password
+                  value: $2a$10$Z2mKTAkJ3OAiMZrd1WlgkuWu1s233e6XJaRQdqvDlgdmJBw5KkOeS
+              - column:
+                  name: role
+                  value: ROLE_USER
+  - changeSet:
+      id: fill-questionnaires
+      author: Nikita Urbel
+      changes:
+        - insert:
+            tableName: questionnaires
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: user_id
+                  value: "1"
+  - changeSet:
+      id: fill-fields
+      author: Nikita Urbel
+      changes:
+        - insert:
+            tableName: fields
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: label
+                  value: First name
+              - column:
+                  name: type
+                  value: SINGLE_LINE_TEXT
+              - column:
+                  name: is_required
+                  value: "true"
+              - column:
+                  name: is_active
+                  value: "true"
+              - column:
+                  name: questionnaire_id
+                  value: "1"
+        - insert:
+            tableName: fields
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: label
+                  value: Last name
+              - column:
+                  name: type
+                  value: SINGLE_LINE_TEXT
+              - column:
+                  name: is_required
+                  value: "true"
+              - column:
+                  name: is_active
+                  value: "true"
+              - column:
+                  name: questionnaire_id
+                  value: "1"
+        - insert:
+            tableName: fields
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: label
+                  value: Birthday
+              - column:
+                  name: type
+                  value: DATE
+              - column:
+                  name: is_required
+                  value: "false"
+              - column:
+                  name: is_active
+                  value: "true"
+              - column:
+                  name: questionnaire_id
+                  value: "1"
+        - insert:
+            tableName: fields
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: label
+                  value: Sex
+              - column:
+                  name: type
+                  value: RADIO_BUTTON
+              - column:
+                  name: options
+                  value: "[\"Male\",\"Female\"]"
+              - column:
+                  name: is_required
+                  value: "true"
+              - column:
+                  name: is_active
+                  value: "true"
+              - column:
+                  name: questionnaire_id
+                  value: "1"
+

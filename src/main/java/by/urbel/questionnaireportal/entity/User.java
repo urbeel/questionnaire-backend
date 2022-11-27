@@ -16,7 +16,8 @@ import java.util.Collections;
 @Data
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "users_id_seq")
     private Long id;
     @Column(length = 256, unique = true, nullable = false)
     private String email;
@@ -27,6 +28,7 @@ public class User implements UserDetails {
     @Column(length = 50)
     private String lastname;
     @Enumerated(EnumType.STRING)
+    @Column(length = 50, nullable = false)
     private UserRole role;
     @Column(length = 16)
     private String phone;

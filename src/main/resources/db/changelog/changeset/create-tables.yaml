@@ -1,0 +1,158 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users-table
+      author: Nikita Urbel
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: firstname
+                  type: varchar(50)
+              - column:
+                  name: lastname
+                  type: varchar(50)
+              - column:
+                  name: phone
+                  type: varchar(16)
+              - column:
+                  name: role
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+  - changeSet:
+            id: create-questionnaires-table
+            author: Nikita Urbel
+            changes:
+              - createTable:
+                  tableName: questionnaires
+                  columns:
+                    - column:
+                        name: id
+                        type: bigint
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: user_id
+                        type: bigint
+                        constraints:
+                          unique: true
+                          nullable: false
+                          foreignKeyName: fk_questionnaire_user
+                          references: users
+  - changeSet:
+      id: create-fields-table
+      author: Nikita Urbel
+      changes:
+        - createTable:
+            tableName: fields
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: label
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_required
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: options
+                  type: json
+              - column:
+                  name: questionnaire_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_field_questionnaire
+                    references: questionnaires
+  - changeSet:
+      id: create-questionnaire-answers-table
+      author: Nikita Urbel
+      changes:
+        - createTable:
+            tableName: questionnaire_answers
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: questionnaire_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_questionnaire_answer_questionnaire
+                    references: questionnaires
+  - changeSet:
+      id: create-field-answers-table
+      author: Nikita Urbel
+      changes:
+        - createTable:
+            tableName: field_answers
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: value
+                  type: text
+              - column:
+                  name: field_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_field_answer_field
+                    references: fields
+              - column:
+                  name: questionnaire_answer_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_field_answer_questionnaire_answer
+                    references: questionnaire_answers

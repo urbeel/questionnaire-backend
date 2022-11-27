@@ -10,7 +10,8 @@ import javax.persistence.*;
 @Data
 public class FieldAnswer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "field_answers_id_seq")
     private Long id;
     @ManyToOne(optional = false)
     @JoinColumn(name = "field_id")

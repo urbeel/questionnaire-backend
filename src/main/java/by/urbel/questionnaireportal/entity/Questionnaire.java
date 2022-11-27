@@ -10,10 +10,11 @@ import java.util.List;
 @Data
 public class Questionnaire {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "questionnaires_id_seq")
     private Long id;
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User author;
     @OneToMany(mappedBy = "questionnaire")
     private List<Field> fields;

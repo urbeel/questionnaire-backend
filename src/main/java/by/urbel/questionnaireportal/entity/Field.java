@@ -18,11 +18,13 @@ import java.util.List;
 @Data
 public class Field {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "fields_id_seq")
     private Long id;
     @Column(nullable = false)
     private String label;
     @Enumerated(EnumType.STRING)
+    @Column(length = 50, nullable = false)
     private FieldType type;
     @Type(type = "jsonb")
     @Column(columnDefinition = "json")

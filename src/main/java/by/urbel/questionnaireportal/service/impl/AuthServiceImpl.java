@@ -62,10 +62,9 @@ public class AuthServiceImpl implements AuthService {
                 new UsernameNotFoundException("Incorrect email or password."));
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
-        String fullName = user.getFirstname() + " " + user.getLastname();
         return AuthResponse.builder()
                 .jwtToken(jwtTokenUtil.generateAccessToken(signInRequest.getEmail()))
-                .fullName(fullName)
+                .fullName(generateFullName(user.getFirstname(), user.getLastname()))
                 .questionnaireId(user.getQuestionnaire().getId())
                 .userId(user.getId())
                 .build();
@@ -99,5 +98,17 @@ public class AuthServiceImpl implements AuthService {
         if (!password.equals(confirmPassword)) {
             throw new PasswordConfirmationException("Password and confirm password does not match.");
         }
+    }
+
+    private String generateFullName(String firstname, String lastname) {
+        StringBuilder fullName = new StringBuilder();
+        if (firstname != null) {
+            fullName.append(firstname);
+            fullName.append(" ");
+        }
+        if (lastname != null) {
+            fullName.append(lastname);
+        }
+        return !fullName.isEmpty() ? fullName.toString().trim() : null;
     }
 }

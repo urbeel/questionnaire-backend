@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/responses")
@@ -26,14 +27,14 @@ public class QuestionnaireAnswerController {
 
     @GetMapping()
     @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
-    public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(@RequestParam Long questionnaireId,
+    public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(@RequestParam UUID questionnaireId,
                                                                  Pageable pageable) {
         return questionnaireAnswerService.readAllByQuestionnaireId(questionnaireId, pageable);
     }
 
     @GetMapping("/size")
     @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
-    public long getAnswersSize(@RequestParam Long questionnaireId) {
+    public long getAnswersSize(@RequestParam UUID questionnaireId) {
         return questionnaireAnswerService.getSize(questionnaireId);
     }
 }

@@ -8,14 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface FieldRepository extends JpaRepository<Field, Long> {
-    Page<Field> findAllByQuestionnaireId(Long questionnaireId, Pageable pageable);
+public interface FieldRepository extends JpaRepository<Field, UUID> {
+    Page<Field> findAllByQuestionnaireId(UUID questionnaireId, Pageable pageable);
 
-    List<Field> findAllByQuestionnaireIdAndIsActive(Long questionnaireId, Boolean isActive);
+    List<Field> findAllByQuestionnaireIdAndIsActive(UUID questionnaireId, Boolean isActive);
 
-    Long countAllByQuestionnaireId(Long questionnaireId);
+    Long countAllByQuestionnaireId(UUID questionnaireId);
 
-    Boolean existsByIdAndQuestionnaire(Long id, Questionnaire questionnaire);
+    Boolean existsByIdAndQuestionnaire(UUID id, Questionnaire questionnaire);
 }

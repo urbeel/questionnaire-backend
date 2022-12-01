@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/fields")
@@ -25,30 +26,30 @@ public class FieldsController {
 
     @GetMapping()
     @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
-    public List<FieldDto> readAllByQuestionnaireId(@RequestParam Long questionnaireId, Pageable pageable) {
+    public List<FieldDto> readAllByQuestionnaireId(@RequestParam UUID questionnaireId, Pageable pageable) {
         return fieldService.readAllByQuestionnaireId(questionnaireId, pageable);
     }
 
     @GetMapping("/active")
-    public List<FieldDto> readAllActive(@RequestParam Long questionnaireId) {
+    public List<FieldDto> readAllActive(@RequestParam UUID questionnaireId) {
         return fieldService.readAllActive(questionnaireId);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_USER') and #fieldDto.questionnaireId==principal.questionnaire.id")
-    public void update(@PathVariable Long id, @Validated(FieldDto.Update.class) @RequestBody FieldDto fieldDto) {
+    public void update(@PathVariable UUID id, @Validated(FieldDto.Update.class) @RequestBody FieldDto fieldDto) {
         fieldService.update(id, fieldDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public void delete(@PathVariable Long id, Authentication authentication) {
+    public void delete(@PathVariable UUID id, Authentication authentication) {
         fieldService.delete(id, authentication);
     }
 
     @GetMapping("/size")
     @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
-    public long getFieldsSize(@RequestParam Long questionnaireId) {
+    public long getFieldsSize(@RequestParam UUID questionnaireId) {
         return fieldService.getSize(questionnaireId);
     }
 }

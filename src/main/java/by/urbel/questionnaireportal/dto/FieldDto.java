@@ -10,12 +10,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class FieldDto {
     @Null(groups = {New.class}, message = "Field id must be null.")
-    private Long id;
+    private UUID id;
     @NotBlank(groups = {New.class, Update.class}, message = "Label cannot be empty.")
     @Size(groups = {New.class, Update.class}, max = 255, message = "Max length of label is 255 characters.")
     private String label;
@@ -29,7 +30,7 @@ public class FieldDto {
     @NotNull(groups = {New.class, Update.class}, message = "IsActive cannot be null.")
     private Boolean isActive;
     @NotNull(groups = {New.class, Update.class}, message = "Questionnaire id cannot be null.")
-    private Long questionnaireId;
+    private UUID questionnaireId;
 
     public interface New {
     }

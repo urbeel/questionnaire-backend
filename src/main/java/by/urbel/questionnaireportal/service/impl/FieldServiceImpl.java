@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -38,19 +39,19 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public List<FieldDto> readAllByQuestionnaireId(Long questionnaireId, Pageable pageable) {
+    public List<FieldDto> readAllByQuestionnaireId(UUID questionnaireId, Pageable pageable) {
         Page<Field> fieldPage = fieldRepository.findAllByQuestionnaireId(questionnaireId, pageable);
         return fieldMapper.fieldsToDto(fieldPage.toList());
     }
 
     @Override
-    public List<FieldDto> readAllActive(Long questionnaireId) {
+    public List<FieldDto> readAllActive(UUID questionnaireId) {
         return fieldMapper.fieldsToDto(fieldRepository.
                 findAllByQuestionnaireIdAndIsActive(questionnaireId, true));
     }
 
     @Override
-    public void update(Long id, FieldDto fieldDto) {
+    public void update(UUID id, FieldDto fieldDto) {
         Field field = fieldRepository.findById(id).orElseThrow(() -> {
             throw new EntityNotFoundException(String.format("Field %d not found.", id));
         });
@@ -60,7 +61,7 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public void delete(Long id, Authentication auth) {
+    public void delete(UUID id, Authentication auth) {
         User user = (User) auth.getPrincipal();
         if (!fieldRepository.existsByIdAndQuestionnaire(id, user.getQuestionnaire())) {
             throw new AccessDeniedException("No permission to delete this field.");
@@ -73,7 +74,7 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public long getSize(Long questionnaireId) {
+    public long getSize(UUID questionnaireId) {
         return fieldRepository.countAllByQuestionnaireId(questionnaireId);
     }
 }

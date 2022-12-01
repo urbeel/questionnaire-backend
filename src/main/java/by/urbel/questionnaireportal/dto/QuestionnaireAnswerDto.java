@@ -8,14 +8,15 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class QuestionnaireAnswerDto {
     @Null(message = "Id of questionnaire answer must be null.")
-    private Long id;
+    private UUID id;
     @NotNull(message = "Questionnaire id cannot be null.")
-    private Long questionnaireId;
+    private UUID questionnaireId;
     @NotEmpty(message = "Questionnaire must have answers of fields.")
     @Valid
     private List<FieldAnswerDto> fieldAnswers;

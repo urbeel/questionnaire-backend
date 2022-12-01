@@ -3,12 +3,14 @@ package by.urbel.questionnaireportal.entity;
 import by.urbel.questionnaireportal.entity.enums.FieldType;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @TypeDefs({
         @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
@@ -18,9 +20,12 @@ import java.util.List;
 @Data
 public class Field {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "fields_id_seq")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
     @Column(nullable = false)
     private String label;
     @Enumerated(EnumType.STRING)

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public void update(Long id, UserDto userDto) {
+    public void update(UUID id, UserDto userDto) {
         User user = userRepository.findById(id).orElseThrow(() -> {
             throw new EntityNotFoundException(String.format("User %d not found.", id));
         });

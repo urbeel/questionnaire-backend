@@ -5,14 +5,15 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class FieldAnswerDto {
     @Null(message = "Id of field answer must be null.")
-    private Long id;
+    private UUID id;
     @NotNull(message = "Field id cannot be null.")
-    private Long fieldId;
-    private Long questionnaireAnswerId;
+    private UUID fieldId;
+    private UUID questionnaireAnswerId;
     private String value;
 }

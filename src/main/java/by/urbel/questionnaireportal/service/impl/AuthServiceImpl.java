@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void changePassword(ChangePasswordRequest dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("User %d not found.", dto.getUserId()));
+            throw new EntityNotFoundException("User not found.");
         });
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
             throw new ChangePasswordException("Incorrect old password.");

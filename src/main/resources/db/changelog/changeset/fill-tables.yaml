@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "1"
+                  value: 1481580c-71b9-11ed-a1eb-0242ac120002
               - column:
                   name: email
                   value: email@gmail.com
@@ -27,10 +27,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "1"
+                  value: 1481580c-71b9-11ed-a1eb-0242ac120002
               - column:
                   name: user_id
-                  value: "1"
+                  value: 1481580c-71b9-11ed-a1eb-0242ac120002
   - changeSet:
       id: fill-fields
       author: Nikita Urbel
@@ -40,7 +40,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: "1"
+                  value: 1481580c-71b9-11ed-a1eb-0242ac120002
               - column:
                   name: label
                   value: First name
@@ -55,13 +55,13 @@ databaseChangeLog:
                   value: "true"
               - column:
                   name: questionnaire_id
-                  value: "1"
+                  value: 1481580c-71b9-11ed-a1eb-0242ac120002
         - insert:
             tableName: fields
             columns:
               - column:
                   name: id
-                  value: "2"
+                  value: 14815d7a-71b9-11ed-a1eb-0242ac120002
               - column:
                   name: label
                   value: Last name
@@ -76,13 +76,13 @@ databaseChangeLog:
                   value: "true"
               - column:
                   name: questionnaire_id
-                  value: "1"
+                  value: 1481580c-71b9-11ed-a1eb-0242ac120002
         - insert:
             tableName: fields
             columns:
               - column:
                   name: id
-                  value: "3"
+                  value: 148162ca-71b9-11ed-a1eb-0242ac120002
               - column:
                   name: label
                   value: Birthday
@@ -97,13 +97,13 @@ databaseChangeLog:
                   value: "true"
               - column:
                   name: questionnaire_id
-                  value: "1"
+                  value: 1481580c-71b9-11ed-a1eb-0242ac120002
         - insert:
             tableName: fields
             columns:
               - column:
                   name: id
-                  value: "4"
+                  value: 14816536-71b9-11ed-a1eb-0242ac120002
               - column:
                   name: label
                   value: Sex
@@ -121,5 +121,5 @@ databaseChangeLog:
                   value: "true"
               - column:
                   name: questionnaire_id
-                  value: "1"
+                  value: 1481580c-71b9-11ed-a1eb-0242ac120002
 

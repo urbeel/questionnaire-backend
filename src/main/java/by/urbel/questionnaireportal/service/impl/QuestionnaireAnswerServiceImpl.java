@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -46,14 +47,14 @@ public class QuestionnaireAnswerServiceImpl implements QuestionnaireAnswerServic
     }
 
     @Override
-    public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(Long questionnaireId, Pageable pageable) {
+    public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(UUID questionnaireId, Pageable pageable) {
         List<QuestionnaireAnswer> questionnaireAnswers =
                 questionnaireAnswerRepository.findAllByQuestionnaireId(questionnaireId, pageable);
         return mapper.questionnaireAnswersToDto(questionnaireAnswers);
     }
 
     @Override
-    public Long getSize(Long questionnaireId) {
+    public Long getSize(UUID questionnaireId) {
         return questionnaireAnswerRepository.countAllByQuestionnaireId(questionnaireId);
     }
 }

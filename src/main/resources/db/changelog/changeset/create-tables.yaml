@@ -8,9 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
-                  autoIncrement: true
-                  startWith: 2
+                  type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -40,28 +38,26 @@ databaseChangeLog:
                   constraints:
                     nullable: false
   - changeSet:
-            id: create-questionnaires-table
-            author: Nikita Urbel
-            changes:
-              - createTable:
-                  tableName: questionnaires
-                  columns:
-                    - column:
-                        name: id
-                        type: bigint
-                        autoIncrement: true
-                        startWith: 2
-                        constraints:
-                          primaryKey: true
-                          nullable: false
-                    - column:
-                        name: user_id
-                        type: bigint
-                        constraints:
-                          unique: true
-                          nullable: false
-                          foreignKeyName: fk_questionnaire_user
-                          references: users
+      id: create-questionnaires-table
+      author: Nikita Urbel
+      changes:
+        - createTable:
+            tableName: questionnaires
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    unique: true
+                    nullable: false
+                    foreignKeyName: fk_questionnaire_user
+                    references: users
   - changeSet:
       id: create-fields-table
       author: Nikita Urbel
@@ -71,9 +67,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
-                  autoIncrement: true
-                  startWith: 5
+                  type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -102,7 +96,7 @@ databaseChangeLog:
                   type: json
               - column:
                   name: questionnaire_id
-                  type: bigint
+                  type: uuid
                   constraints:
                     nullable: false
                     foreignKeyName: fk_field_questionnaire
@@ -116,14 +110,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
-                  autoIncrement: true
+                  type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: questionnaire_id
-                  type: bigint
+                  type: uuid
                   constraints:
                     nullable: false
                     foreignKeyName: fk_questionnaire_answer_questionnaire
@@ -137,8 +130,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
-                  autoIncrement: true
+                  type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -147,14 +139,14 @@ databaseChangeLog:
                   type: text
               - column:
                   name: field_id
-                  type: bigint
+                  type: uuid
                   constraints:
                     nullable: false
                     foreignKeyName: fk_field_answer_field
                     references: fields
               - column:
                   name: questionnaire_answer_id
-                  type: bigint
+                  type: uuid
                   constraints:
                     nullable: false
                     foreignKeyName: fk_field_answer_questionnaire_answer

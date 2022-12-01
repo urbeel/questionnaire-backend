@@ -1,18 +1,23 @@
 package by.urbel.questionnaireportal.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "field_answers")
 @Data
 public class FieldAnswer {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "field_answers_id_seq")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
     @ManyToOne(optional = false)
     @JoinColumn(name = "field_id")
     private Field field;

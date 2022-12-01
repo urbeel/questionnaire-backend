@@ -17,9 +17,6 @@ public class SignUpRequest {
     @NotBlank(message = "Password cannot be empty.")
     @Size(min = 6, max = 16, message = "The password must be between 6 and 16 characters long.")
     private String password;
-    @NotBlank(message = "Confirm password cannot be empty.")
-    @Size(min = 6, max = 16, message = "The confirm password must be between 6 and 16 characters long.")
-    private String confirmPassword;
     @Size(max = 50, message = "Max length of firstname is 50 characters.")
     private String firstname;
     @Size(max = 50, message = "Max length of lastname is 50 characters.")

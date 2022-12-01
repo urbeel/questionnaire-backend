@@ -3,7 +3,6 @@ package by.urbel.questionnaireportal.exception;
 import by.urbel.questionnaireportal.service.exceptions.AccessDeniedException;
 import by.urbel.questionnaireportal.service.exceptions.ChangePasswordException;
 import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
-import by.urbel.questionnaireportal.service.exceptions.PasswordConfirmationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({EmailAlreadyUsedException.class, PasswordConfirmationException.class})
+    @ExceptionHandler({EmailAlreadyUsedException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleSaveUserException(RuntimeException e) {
         return new Response(HttpStatus.BAD_REQUEST, e.getMessage());

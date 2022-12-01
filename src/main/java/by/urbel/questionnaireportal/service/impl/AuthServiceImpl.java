@@ -14,7 +14,6 @@ import by.urbel.questionnaireportal.service.AuthService;
 import by.urbel.questionnaireportal.service.MailService;
 import by.urbel.questionnaireportal.service.exceptions.ChangePasswordException;
 import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
-import by.urbel.questionnaireportal.service.exceptions.PasswordConfirmationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +43,6 @@ public class AuthServiceImpl implements AuthService {
             "Changing your account password";
 
     public void register(SignUpRequest signUpRequest) {
-        checkPasswordsEquality(signUpRequest.getPassword(), signUpRequest.getConfirmPassword());
         User user = userMapper.signUpRequestToUser(signUpRequest);
         checkExistence(user);
         user.setRole(UserRole.ROLE_USER);
@@ -72,7 +70,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void changePassword(ChangePasswordRequest dto) {
-        checkPasswordsEquality(dto.getPassword(), dto.getConfirmPassword());
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> {
             throw new EntityNotFoundException(String.format("User %d not found.", dto.getUserId()));
         });
@@ -91,12 +88,6 @@ public class AuthServiceImpl implements AuthService {
     private void checkExistence(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyUsedException("Email is already used.");
-        }
-    }
-
-    private void checkPasswordsEquality(String password, String confirmPassword) {
-        if (!password.equals(confirmPassword)) {
-            throw new PasswordConfirmationException("Password and confirm password does not match.");
         }
     }
 

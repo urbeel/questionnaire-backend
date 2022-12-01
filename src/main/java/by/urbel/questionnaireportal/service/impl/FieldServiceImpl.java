@@ -10,7 +10,7 @@ import by.urbel.questionnaireportal.service.FieldService;
 import by.urbel.questionnaireportal.service.exceptions.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -38,11 +38,8 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public List<FieldDto> readAllByQuestionnaireId(Long questionnaireId, Integer page, Integer size) {
-        if (page == null || size == null) {
-            return fieldMapper.fieldsToDto(fieldRepository.findAllByQuestionnaireId(questionnaireId));
-        }
-        Page<Field> fieldPage = fieldRepository.findAllByQuestionnaireId(questionnaireId, PageRequest.of(page, size));
+    public List<FieldDto> readAllByQuestionnaireId(Long questionnaireId, Pageable pageable) {
+        Page<Field> fieldPage = fieldRepository.findAllByQuestionnaireId(questionnaireId, pageable);
         return fieldMapper.fieldsToDto(fieldPage.toList());
     }
 

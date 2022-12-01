@@ -10,7 +10,7 @@ import by.urbel.questionnaireportal.repository.QuestionnaireAnswerRepository;
 import by.urbel.questionnaireportal.repository.QuestionnaireRepository;
 import by.urbel.questionnaireportal.service.QuestionnaireAnswerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
@@ -46,9 +46,9 @@ public class QuestionnaireAnswerServiceImpl implements QuestionnaireAnswerServic
     }
 
     @Override
-    public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(Long questionnaireId, Integer page, Integer size) {
+    public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(Long questionnaireId, Pageable pageable) {
         List<QuestionnaireAnswer> questionnaireAnswers =
-                questionnaireAnswerRepository.findAllByQuestionnaireId(questionnaireId, PageRequest.of(page, size));
+                questionnaireAnswerRepository.findAllByQuestionnaireId(questionnaireId, pageable);
         return mapper.questionnaireAnswersToDto(questionnaireAnswers);
     }
 

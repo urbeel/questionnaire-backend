@@ -3,6 +3,7 @@ package by.urbel.questionnaireportal.controller;
 import by.urbel.questionnaireportal.dto.FieldDto;
 import by.urbel.questionnaireportal.service.FieldService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -24,10 +25,8 @@ public class FieldsController {
 
     @GetMapping()
     @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
-    public List<FieldDto> readAllByQuestionnaireId(@RequestParam(required = false) Integer page,
-                                                   @RequestParam(required = false) Integer size,
-                                                   @RequestParam Long questionnaireId) {
-        return fieldService.readAllByQuestionnaireId(questionnaireId, page, size);
+    public List<FieldDto> readAllByQuestionnaireId(@RequestParam Long questionnaireId, Pageable pageable) {
+        return fieldService.readAllByQuestionnaireId(questionnaireId, pageable);
     }
 
     @GetMapping("/active")

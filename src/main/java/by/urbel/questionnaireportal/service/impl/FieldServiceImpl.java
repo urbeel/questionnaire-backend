@@ -1,5 +1,6 @@
 package by.urbel.questionnaireportal.service.impl;
 
+import by.urbel.questionnaireportal.constants.Messages;
 import by.urbel.questionnaireportal.dto.FieldDto;
 import by.urbel.questionnaireportal.entity.Field;
 import by.urbel.questionnaireportal.entity.User;
@@ -30,10 +31,10 @@ public class FieldServiceImpl implements FieldService {
     public void create(FieldDto fieldDto) {
         Field field = fieldMapper.dtoToField(fieldDto);
         if (fieldDto.getId() != null && fieldRepository.existsById(fieldDto.getId())) {
-            throw new EntityExistsException(String.format("Field %d already exists.", fieldDto.getId()));
+            throw new EntityExistsException(Messages.FIELD_EXISTS);
         }
         field.setQuestionnaire(questionnaireRepository.findById(fieldDto.getQuestionnaireId()).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("Questionnaire %d not found.", fieldDto.getQuestionnaireId()));
+            throw new EntityNotFoundException(Messages.Q_NOT_FOUND);
         }));
         fieldRepository.save(field);
     }
@@ -53,7 +54,7 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public void update(UUID id, FieldDto fieldDto) {
         Field field = fieldRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("Field %d not found.", id));
+            throw new EntityNotFoundException(Messages.FIELD_NOT_FOUND);
         });
         fieldMapper.updateExisting(fieldDto, field);
         field.setId(id);
@@ -64,12 +65,12 @@ public class FieldServiceImpl implements FieldService {
     public void delete(UUID id, Authentication auth) {
         User user = (User) auth.getPrincipal();
         if (!fieldRepository.existsByIdAndQuestionnaire(id, user.getQuestionnaire())) {
-            throw new AccessDeniedException("No permission to delete this field.");
+            throw new AccessDeniedException("");
         }
         if (fieldRepository.existsById(id)) {
             fieldRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException(String.format("Field %d not found.", id));
+            throw new EntityNotFoundException(Messages.NO_PERMISSIONS_DELETE_FIELD);
         }
     }
 

@@ -1,5 +1,7 @@
 package by.urbel.questionnaireportal.service.impl;
 
+import by.urbel.questionnaireportal.constants.Mail;
+import by.urbel.questionnaireportal.constants.Messages;
 import by.urbel.questionnaireportal.dto.AuthResponse;
 import by.urbel.questionnaireportal.dto.ChangePasswordRequest;
 import by.urbel.questionnaireportal.dto.SignInRequest;
@@ -33,15 +35,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
 
-    private static final String REGISTRATION_MESSAGE =
-            "Thank you for registration! Now you can create your custom questionnaire.";
-    private static final String CHANGE_PASSWORD_MESSAGE =
-            "Your password was changed.";
-    private static final String REGISTRATION_SUBJECT =
-            "Successful registration";
-    private static final String CHANGE_PASSWORD_SUBJECT =
-            "Changing your account password";
-
     public void register(SignUpRequest signUpRequest) {
         User user = userMapper.signUpRequestToUser(signUpRequest);
         checkExistence(user);
@@ -51,13 +44,13 @@ public class AuthServiceImpl implements AuthService {
         questionnaire.setAuthor(user);
         user.setQuestionnaire(questionnaire);
         userRepository.save(user);
-        mailService.sendMessage(user.getEmail(), REGISTRATION_SUBJECT, REGISTRATION_MESSAGE);
+        mailService.sendMessage(user.getEmail(), Mail.REGISTRATION_SUBJECT, Mail.REGISTRATION_MESSAGE);
     }
 
     @Override
     public AuthResponse login(SignInRequest signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail()).orElseThrow(() ->
-                new UsernameNotFoundException("Incorrect email or password."));
+                new UsernameNotFoundException(Messages.INCORRECT_EMAIL_PASSWORD));
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
         return AuthResponse.builder()
@@ -71,23 +64,23 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void changePassword(ChangePasswordRequest dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> {
-            throw new EntityNotFoundException("User not found.");
+            throw new EntityNotFoundException(Messages.USER_NOT_FOUND);
         });
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new ChangePasswordException("Incorrect old password.");
+            throw new ChangePasswordException(Messages.INCORRECT_OLD_PASSWORD);
         }
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
             userRepository.save(user);
-            mailService.sendMessage(user.getEmail(), CHANGE_PASSWORD_SUBJECT, CHANGE_PASSWORD_MESSAGE);
+            mailService.sendMessage(user.getEmail(), Mail.CHANGE_PASSWORD_SUBJECT, Mail.CHANGE_PASSWORD_MESSAGE);
         } else {
-            throw new ChangePasswordException("New and old passwords must be different.");
+            throw new ChangePasswordException(Messages.PASSWORDS_MUST_BE_DIFFERENT);
         }
     }
 
     private void checkExistence(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new EmailAlreadyUsedException("Email is already used.");
+            throw new EmailAlreadyUsedException(Messages.EMAIL_USED);
         }
     }
 

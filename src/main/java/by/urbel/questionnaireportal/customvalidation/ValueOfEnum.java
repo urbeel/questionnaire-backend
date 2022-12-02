@@ -1,5 +1,7 @@
 package by.urbel.questionnaireportal.customvalidation;
 
+import by.urbel.questionnaireportal.constants.Messages;
+
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
@@ -15,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = ValueOfEnumValidator.class)
 public @interface ValueOfEnum {
     Class<? extends Enum<?>> enumClass();
-    String message() default "must be any of enum {enumClass}";
+    String message() default Messages.MUST_BE_ENUM;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

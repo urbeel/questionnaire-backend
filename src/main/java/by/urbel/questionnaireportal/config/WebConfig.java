@@ -1,5 +1,6 @@
 package by.urbel.questionnaireportal.config;
 
+import by.urbel.questionnaireportal.constants.Routes;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**").allowedOrigins(clientUrl)
+        registry.addMapping(Routes.APP_PREFIX + "/**").allowedOrigins(clientUrl)
                 .allowedMethods("*");
     }
 }

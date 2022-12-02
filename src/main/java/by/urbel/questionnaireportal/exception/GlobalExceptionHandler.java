@@ -1,5 +1,6 @@
 package by.urbel.questionnaireportal.exception;
 
+import by.urbel.questionnaireportal.constants.Messages;
 import by.urbel.questionnaireportal.service.exceptions.AccessDeniedException;
 import by.urbel.questionnaireportal.service.exceptions.ChangePasswordException;
 import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
@@ -32,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({UsernameNotFoundException.class, AuthenticationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleAuthenticationExceptions() {
-        return new Response(HttpStatus.BAD_REQUEST, "Incorrect email or password.");
+        return new Response(HttpStatus.BAD_REQUEST, Messages.INCORRECT_EMAIL_PASSWORD);
     }
 
     @ExceptionHandler({EntityNotFoundException.class})
@@ -50,7 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleValidationExceptions(MethodArgumentNotValidException e) {
-        Response response = new Response(HttpStatus.BAD_REQUEST, "Invalid fields of dto entity.");
+        Response response = new Response(HttpStatus.BAD_REQUEST, Messages.INVALID_DTO);
         Map<String, List<String>> errors = e.getBindingResult().getAllErrors().stream()
                 .collect(Collectors.groupingBy(error ->
                                 ((FieldError) error).getField(),

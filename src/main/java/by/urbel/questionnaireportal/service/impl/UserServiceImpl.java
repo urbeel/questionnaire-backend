@@ -1,6 +1,7 @@
 package by.urbel.questionnaireportal.service.impl;
 
 
+import by.urbel.questionnaireportal.constants.Messages;
 import by.urbel.questionnaireportal.dto.UserDto;
 import by.urbel.questionnaireportal.entity.User;
 import by.urbel.questionnaireportal.mapper.UserMapper;
@@ -25,16 +26,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException(Messages.USER_NOT_FOUND));
     }
 
     @Override
     public void update(UUID id, UserDto userDto) {
         User user = userRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("User %d not found.", id));
+            throw new EntityNotFoundException(Messages.USER_NOT_FOUND);
         });
         if (!user.getEmail().equals(userDto.getEmail()) && userRepository.existsByEmail(userDto.getEmail())) {
-            throw new EmailAlreadyUsedException("Email is already used for another user.");
+            throw new EmailAlreadyUsedException(Messages.EMAIL_USED);
         }
         userMapper.updateExisting(userDto, user);
         user.setId(id);

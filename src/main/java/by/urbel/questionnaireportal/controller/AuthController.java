@@ -1,5 +1,7 @@
 package by.urbel.questionnaireportal.controller;
 
+import by.urbel.questionnaireportal.constants.Roles;
+import by.urbel.questionnaireportal.constants.Routes;
 import by.urbel.questionnaireportal.dto.AuthResponse;
 import by.urbel.questionnaireportal.dto.ChangePasswordRequest;
 import by.urbel.questionnaireportal.dto.SignInRequest;
@@ -12,23 +14,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(Routes.AUTH)
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/signup")
+    @PostMapping(Routes.SIGNUP)
     public void register(@Valid @RequestBody SignUpRequest signUpRequest) {
         authService.register(signUpRequest);
     }
 
-    @PostMapping("/login")
+    @PostMapping(Routes.LOGIN)
     public AuthResponse authenticate(@Valid @RequestBody SignInRequest signInRequest) {
         return authService.login(signInRequest);
     }
 
-    @PatchMapping("/password")
-    @PreAuthorize("hasAuthority('ROLE_USER') and #dto.userId==principal.id")
+    @PatchMapping(Routes.CHANGE_PASSWORD)
+    @PreAuthorize(Roles.USER + " and #dto.userId==principal.id")
     public void changePassword(@Valid @RequestBody ChangePasswordRequest dto) {
         authService.changePassword(dto);
     }

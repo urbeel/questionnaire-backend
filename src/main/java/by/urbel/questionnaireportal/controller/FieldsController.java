@@ -1,5 +1,7 @@
 package by.urbel.questionnaireportal.controller;
 
+import by.urbel.questionnaireportal.constants.Roles;
+import by.urbel.questionnaireportal.constants.Routes;
 import by.urbel.questionnaireportal.dto.FieldDto;
 import by.urbel.questionnaireportal.service.FieldService;
 import lombok.RequiredArgsConstructor;
@@ -13,42 +15,42 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/fields")
+@RequestMapping(Routes.FIELDS)
 @RequiredArgsConstructor
 public class FieldsController {
     private final FieldService fieldService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_USER') and #fieldDto.questionnaireId==principal.questionnaire.id")
+    @PreAuthorize(Roles.USER + " and #fieldDto.questionnaireId==principal.questionnaire.id")
     public void save(@Validated(FieldDto.New.class) @RequestBody FieldDto fieldDto) {
         fieldService.create(fieldDto);
     }
 
     @GetMapping()
-    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
+    @PreAuthorize(Roles.USER + " and #questionnaireId==principal.questionnaire.id")
     public List<FieldDto> readAllByQuestionnaireId(@RequestParam UUID questionnaireId, Pageable pageable) {
         return fieldService.readAllByQuestionnaireId(questionnaireId, pageable);
     }
 
-    @GetMapping("/active")
+    @GetMapping(Routes.ACTIVE_FIELDS)
     public List<FieldDto> readAllActive(@RequestParam UUID questionnaireId) {
         return fieldService.readAllActive(questionnaireId);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER') and #fieldDto.questionnaireId==principal.questionnaire.id")
+    @PutMapping(Routes.FIELD_ID)
+    @PreAuthorize(Roles.USER + " and #fieldDto.questionnaireId==principal.questionnaire.id")
     public void update(@PathVariable UUID id, @Validated(FieldDto.Update.class) @RequestBody FieldDto fieldDto) {
         fieldService.update(id, fieldDto);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @DeleteMapping(Routes.FIELD_ID)
+    @PreAuthorize(Roles.USER)
     public void delete(@PathVariable UUID id, Authentication authentication) {
         fieldService.delete(id, authentication);
     }
 
-    @GetMapping("/size")
-    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
+    @GetMapping(Routes.FIELDS_SIZE)
+    @PreAuthorize(Roles.USER + " and #questionnaireId==principal.questionnaire.id")
     public long getFieldsSize(@RequestParam UUID questionnaireId) {
         return fieldService.getSize(questionnaireId);
     }

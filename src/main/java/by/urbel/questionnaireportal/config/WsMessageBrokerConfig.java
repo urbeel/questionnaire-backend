@@ -1,5 +1,6 @@
 package by.urbel.questionnaireportal.config;
 
+import by.urbel.questionnaireportal.constants.WebSockets;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -15,12 +16,12 @@ public class WsMessageBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins(clientUrl).withSockJS();
+        registry.addEndpoint(WebSockets.WS_ENDPOINT).setAllowedOrigins(clientUrl).withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic/responses");
-        registry.setApplicationDestinationPrefixes("/app");
+        registry.enableSimpleBroker(WebSockets.RESPONSES_TOPIC);
+        registry.setApplicationDestinationPrefixes(WebSockets.WS_APP_ENDPOINT);
     }
 }

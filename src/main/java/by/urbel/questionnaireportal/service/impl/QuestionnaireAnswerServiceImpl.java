@@ -1,5 +1,6 @@
 package by.urbel.questionnaireportal.service.impl;
 
+import by.urbel.questionnaireportal.constants.Messages;
 import by.urbel.questionnaireportal.dto.QuestionnaireAnswerDto;
 import by.urbel.questionnaireportal.entity.Field;
 import by.urbel.questionnaireportal.entity.Questionnaire;
@@ -29,16 +30,16 @@ public class QuestionnaireAnswerServiceImpl implements QuestionnaireAnswerServic
     @Override
     public void create(QuestionnaireAnswerDto dto) {
         if (dto.getId() != null && questionnaireAnswerRepository.existsById(dto.getId())) {
-            throw new EntityExistsException(String.format("Answer %d on questionnaire already exists.", dto.getId()));
+            throw new EntityExistsException(Messages.Q_ANSWER_EXISTS);
         }
         QuestionnaireAnswer questionnaireAnswer = mapper.dtoToQuestionnaireAnswer(dto);
         Questionnaire questionnaire = questionnaireRepository.findById(dto.getQuestionnaireId()).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("Questionnaire %d not found.", dto.getQuestionnaireId()));
+            throw new EntityNotFoundException(Messages.Q_NOT_FOUND);
         });
         questionnaireAnswer.getFieldAnswers().forEach(fieldAnswer -> {
             fieldAnswer.setQuestionnaireAnswer(questionnaireAnswer);
             Field field = fieldRepository.findById(fieldAnswer.getField().getId()).orElseThrow(() -> {
-                throw new EntityNotFoundException(String.format("Field %d not found.", fieldAnswer.getField().getId()));
+                throw new EntityNotFoundException(Messages.FIELD_NOT_FOUND + fieldAnswer.getField().getId());
             });
             fieldAnswer.setField(field);
         });

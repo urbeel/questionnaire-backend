@@ -1,5 +1,8 @@
 package by.urbel.questionnaireportal.controller;
 
+import by.urbel.questionnaireportal.constants.Roles;
+import by.urbel.questionnaireportal.constants.Routes;
+import by.urbel.questionnaireportal.constants.WebSockets;
 import by.urbel.questionnaireportal.dto.QuestionnaireAnswerDto;
 import by.urbel.questionnaireportal.service.QuestionnaireAnswerService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/responses")
+@RequestMapping(Routes.Q_ANSWERS)
 @RequiredArgsConstructor
 public class QuestionnaireAnswerController {
     private final QuestionnaireAnswerService questionnaireAnswerService;
@@ -22,18 +25,21 @@ public class QuestionnaireAnswerController {
     @PostMapping
     public void createAnswer(@RequestBody @Valid QuestionnaireAnswerDto dto) {
         questionnaireAnswerService.create(dto);
-        messagingTemplate.convertAndSend("/topic/responses", "Update responses");
+        messagingTemplate.convertAndSend(
+                WebSockets.RESPONSES_TOPIC,
+                WebSockets.MESSAGE_UPDATE_RESPONSES
+        );
     }
 
     @GetMapping()
-    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
+    @PreAuthorize(Roles.USER + " and #questionnaireId==principal.questionnaire.id")
     public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(@RequestParam UUID questionnaireId,
                                                                  Pageable pageable) {
         return questionnaireAnswerService.readAllByQuestionnaireId(questionnaireId, pageable);
     }
 
-    @GetMapping("/size")
-    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
+    @GetMapping(Routes.Q_ANSWERS_SIZE)
+    @PreAuthorize(Roles.USER + " and #questionnaireId==principal.questionnaire.id")
     public long getAnswersSize(@RequestParam UUID questionnaireId) {
         return questionnaireAnswerService.getSize(questionnaireId);
     }

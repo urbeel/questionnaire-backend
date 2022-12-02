@@ -1,8 +1,9 @@
 package by.urbel.questionnaireportal.entity;
 
+import by.urbel.questionnaireportal.constants.Tables;
 import by.urbel.questionnaireportal.entity.enums.UserRole;
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,20 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.UUID;
 
 
 @Entity
-@Table(name = "users")
-@Data
-public class User implements UserDetails {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    private UUID id;
+@Table(name = Tables.USERS)
+@Getter
+@Setter
+public class User extends EntityWithUuid implements UserDetails {
     @Column(length = 256, unique = true, nullable = false)
     private String email;
     @Column(length = 60, nullable = false)

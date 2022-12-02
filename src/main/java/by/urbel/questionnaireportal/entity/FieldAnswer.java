@@ -1,28 +1,26 @@
 package by.urbel.questionnaireportal.entity;
 
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import by.urbel.questionnaireportal.constants.PostgresTypes;
+import by.urbel.questionnaireportal.constants.Tables;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
-import java.util.UUID;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "field_answers")
-@Data
-public class FieldAnswer {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    private UUID id;
+@Table(name = Tables.FIELD_ANSWERS)
+@Getter
+@Setter
+public class FieldAnswer extends EntityWithUuid {
     @ManyToOne(optional = false)
-    @JoinColumn(name = "field_id")
+    @JoinColumn(name = Tables.Fields.FIELD_ID)
     private Field field;
     @ManyToOne(optional = false)
     private QuestionnaireAnswer questionnaireAnswer;
-    @Type(type = "text")
+    @Type(type = PostgresTypes.TEXT)
     private String value;
 }

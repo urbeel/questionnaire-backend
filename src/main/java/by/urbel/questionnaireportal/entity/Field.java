@@ -1,38 +1,33 @@
 package by.urbel.questionnaireportal.entity;
 
+import by.urbel.questionnaireportal.constants.PostgresTypes;
+import by.urbel.questionnaireportal.constants.Tables;
 import by.urbel.questionnaireportal.entity.enums.FieldType;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 @TypeDefs({
-        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+        @TypeDef(name = PostgresTypes.JSONB, typeClass = JsonBinaryType.class)
 })
 @Entity
-@Table(name = "fields")
-@Data
-public class Field {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    private UUID id;
+@Table(name = Tables.FIELDS)
+@Getter
+@Setter
+public class Field extends EntityWithUuid {
     @Column(nullable = false)
     private String label;
     @Enumerated(EnumType.STRING)
     @Column(length = 50, nullable = false)
     private FieldType type;
-    @Type(type = "jsonb")
-    @Column(columnDefinition = "json")
+    @Type(type = PostgresTypes.JSONB)
+    @Column(columnDefinition = PostgresTypes.JSON)
     private List<String> options;
     @Column(nullable = false)
     private Boolean isRequired;

@@ -1,5 +1,6 @@
 package by.urbel.questionnaireportal.dto;
 
+import by.urbel.questionnaireportal.constants.Messages;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,11 +14,11 @@ import java.util.UUID;
 @Getter
 @Setter
 public class QuestionnaireAnswerDto {
-    @Null(message = "Id of questionnaire answer must be null.")
+    @Null(message = Messages.Q_ANSWER_ID_NOT_NULL)
     private UUID id;
-    @NotNull(message = "Questionnaire id cannot be null.")
+    @NotNull(message = Messages.Q_ID_NOT_NULL)
     private UUID questionnaireId;
-    @NotEmpty(message = "Questionnaire must have answers of fields.")
+    @NotEmpty(message = Messages.FIELD_ANSWERS_NOT_EMPTY)
     @Valid
     private List<FieldAnswerDto> fieldAnswers;
 }

@@ -1,25 +1,19 @@
 package by.urbel.questionnaireportal.entity;
 
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import by.urbel.questionnaireportal.constants.Tables;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
-@Table(name = "questionnaire_answers")
-@Data
-public class QuestionnaireAnswer {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    private UUID id;
+@Table(name = Tables.QUESTIONNAIRE_ANSWERS)
+@Getter
+@Setter
+public class QuestionnaireAnswer extends EntityWithUuid {
     @OneToOne
-    @JoinColumn(name = "questionnaire_id", nullable = false)
+    @JoinColumn(name = Tables.Fields.QUESTIONNAIRE_ID, nullable = false)
     private Questionnaire questionnaire;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionnaireAnswer")
     private List<FieldAnswer> fieldAnswers;

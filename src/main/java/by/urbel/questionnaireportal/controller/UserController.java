@@ -1,6 +1,5 @@
 package by.urbel.questionnaireportal.controller;
 
-import by.urbel.questionnaireportal.constants.Roles;
 import by.urbel.questionnaireportal.constants.Routes;
 import by.urbel.questionnaireportal.dto.UserDto;
 import by.urbel.questionnaireportal.service.UserService;
@@ -18,7 +17,7 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping(Routes.USER_ID)
-    @PreAuthorize(Roles.USER + " and #userId==principal.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #userId==principal.id")
     public void updateUser(@PathVariable UUID userId, @Validated @RequestBody UserDto userDto) {
         userService.update(userId, userDto);
     }

@@ -1,6 +1,5 @@
 package by.urbel.questionnaireportal.controller;
 
-import by.urbel.questionnaireportal.constants.Roles;
 import by.urbel.questionnaireportal.constants.Routes;
 import by.urbel.questionnaireportal.constants.WebSockets;
 import by.urbel.questionnaireportal.dto.QuestionnaireAnswerDto;
@@ -32,14 +31,14 @@ public class QuestionnaireAnswerController {
     }
 
     @GetMapping()
-    @PreAuthorize(Roles.USER + " and #questionnaireId==principal.questionnaire.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
     public List<QuestionnaireAnswerDto> readAllByQuestionnaireId(@RequestParam UUID questionnaireId,
                                                                  Pageable pageable) {
         return questionnaireAnswerService.readAllByQuestionnaireId(questionnaireId, pageable);
     }
 
     @GetMapping(Routes.Q_ANSWERS_SIZE)
-    @PreAuthorize(Roles.USER + " and #questionnaireId==principal.questionnaire.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
     public long getAnswersSize(@RequestParam UUID questionnaireId) {
         return questionnaireAnswerService.getSize(questionnaireId);
     }

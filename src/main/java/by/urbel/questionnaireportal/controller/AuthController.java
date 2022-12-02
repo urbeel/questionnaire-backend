@@ -1,6 +1,5 @@
 package by.urbel.questionnaireportal.controller;
 
-import by.urbel.questionnaireportal.constants.Roles;
 import by.urbel.questionnaireportal.constants.Routes;
 import by.urbel.questionnaireportal.dto.AuthResponse;
 import by.urbel.questionnaireportal.dto.ChangePasswordRequest;
@@ -30,7 +29,7 @@ public class AuthController {
     }
 
     @PatchMapping(Routes.CHANGE_PASSWORD)
-    @PreAuthorize(Roles.USER + " and #dto.userId==principal.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #dto.userId==principal.id")
     public void changePassword(@Valid @RequestBody ChangePasswordRequest dto) {
         authService.changePassword(dto);
     }

@@ -1,6 +1,5 @@
 package by.urbel.questionnaireportal.controller;
 
-import by.urbel.questionnaireportal.constants.Roles;
 import by.urbel.questionnaireportal.constants.Routes;
 import by.urbel.questionnaireportal.dto.FieldDto;
 import by.urbel.questionnaireportal.service.FieldService;
@@ -21,13 +20,13 @@ public class FieldsController {
     private final FieldService fieldService;
 
     @PostMapping
-    @PreAuthorize(Roles.USER + " and #fieldDto.questionnaireId==principal.questionnaire.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #fieldDto.questionnaireId==principal.questionnaire.id")
     public void save(@Validated(FieldDto.New.class) @RequestBody FieldDto fieldDto) {
         fieldService.create(fieldDto);
     }
 
     @GetMapping()
-    @PreAuthorize(Roles.USER + " and #questionnaireId==principal.questionnaire.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
     public List<FieldDto> readAllByQuestionnaireId(@RequestParam UUID questionnaireId, Pageable pageable) {
         return fieldService.readAllByQuestionnaireId(questionnaireId, pageable);
     }
@@ -38,19 +37,19 @@ public class FieldsController {
     }
 
     @PutMapping(Routes.FIELD_ID)
-    @PreAuthorize(Roles.USER + " and #fieldDto.questionnaireId==principal.questionnaire.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #fieldDto.questionnaireId==principal.questionnaire.id")
     public void update(@PathVariable UUID id, @Validated(FieldDto.Update.class) @RequestBody FieldDto fieldDto) {
         fieldService.update(id, fieldDto);
     }
 
     @DeleteMapping(Routes.FIELD_ID)
-    @PreAuthorize(Roles.USER)
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public void delete(@PathVariable UUID id, Authentication authentication) {
         fieldService.delete(id, authentication);
     }
 
     @GetMapping(Routes.FIELDS_SIZE)
-    @PreAuthorize(Roles.USER + " and #questionnaireId==principal.questionnaire.id")
+    @PreAuthorize("hasAuthority('ROLE_USER') and #questionnaireId==principal.questionnaire.id")
     public long getFieldsSize(@RequestParam UUID questionnaireId) {
         return fieldService.getSize(questionnaireId);
     }

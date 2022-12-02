@@ -35,4 +35,6 @@ public class Field extends EntityWithUuid {
     private Boolean isActive;
     @ManyToOne(optional = false)
     private Questionnaire questionnaire;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "field")
+    private List<FieldAnswer> fieldAnswers;
 }

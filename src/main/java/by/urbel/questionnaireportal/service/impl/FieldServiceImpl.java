@@ -3,9 +3,11 @@ package by.urbel.questionnaireportal.service.impl;
 import by.urbel.questionnaireportal.constants.Messages;
 import by.urbel.questionnaireportal.dto.FieldDto;
 import by.urbel.questionnaireportal.entity.Field;
+import by.urbel.questionnaireportal.entity.QuestionnaireAnswer;
 import by.urbel.questionnaireportal.entity.User;
 import by.urbel.questionnaireportal.mapper.FieldMapper;
 import by.urbel.questionnaireportal.repository.FieldRepository;
+import by.urbel.questionnaireportal.repository.QuestionnaireAnswerRepository;
 import by.urbel.questionnaireportal.repository.QuestionnaireRepository;
 import by.urbel.questionnaireportal.service.FieldService;
 import by.urbel.questionnaireportal.service.exceptions.AccessDeniedException;
@@ -25,6 +27,7 @@ import java.util.UUID;
 public class FieldServiceImpl implements FieldService {
     private final FieldRepository fieldRepository;
     private final QuestionnaireRepository questionnaireRepository;
+    private final QuestionnaireAnswerRepository questionnaireAnswerRepository;
     private final FieldMapper fieldMapper;
 
     @Override
@@ -65,10 +68,20 @@ public class FieldServiceImpl implements FieldService {
     public void delete(UUID id, Authentication auth) {
         User user = (User) auth.getPrincipal();
         if (!fieldRepository.existsByIdAndQuestionnaire(id, user.getQuestionnaire())) {
-            throw new AccessDeniedException("");
+            throw new AccessDeniedException("Access denied!");
         }
         if (fieldRepository.existsById(id)) {
             fieldRepository.deleteById(id);
+            UUID questionnaireId = user.getQuestionnaire().getId();
+            List<QuestionnaireAnswer> questionnaireAnswers =
+                    questionnaireAnswerRepository.findAllByQuestionnaireId(questionnaireId, null);
+            if (!questionnaireAnswers.isEmpty()) {
+                questionnaireAnswers.forEach(questionnaireAnswer -> {
+                    if (questionnaireAnswer.getFieldAnswers().isEmpty()) {
+                        questionnaireAnswerRepository.delete(questionnaireAnswer);
+                    }
+                });
+            }
         } else {
             throw new EntityNotFoundException(Messages.NO_PERMISSIONS_DELETE_FIELD);
         }

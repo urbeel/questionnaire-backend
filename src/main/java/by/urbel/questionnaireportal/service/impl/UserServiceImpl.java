@@ -30,6 +30,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    public UserDto findById(UUID id) {
+        return userMapper.userToDto(userRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Messages.USER_NOT_FOUND);
+        }));
+    }
+
+    @Override
     public void update(UUID id, UserDto userDto) {
         User user = userRepository.findById(id).orElseThrow(() -> {
             throw new EntityNotFoundException(Messages.USER_NOT_FOUND);

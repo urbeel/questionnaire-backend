@@ -11,5 +11,7 @@ import org.mapstruct.MappingTarget;
 public interface UserMapper {
     User signUpRequestToUser(SignUpRequest signUpRequest);
 
+    UserDto userToDto(User user);
+
     void updateExisting(UserDto userDto, @MappingTarget User user);
 }

@@ -16,6 +16,12 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping(Routes.USER_ID)
+    @PreAuthorize("hasAuthority('ROLE_USER') and #userId==principal.id")
+    public UserDto findUser(@PathVariable UUID userId) {
+        return userService.findById(userId);
+    }
+
     @PutMapping(Routes.USER_ID)
     @PreAuthorize("hasAuthority('ROLE_USER') and #userId==principal.id")
     public void updateUser(@PathVariable UUID userId, @Validated @RequestBody UserDto userDto) {

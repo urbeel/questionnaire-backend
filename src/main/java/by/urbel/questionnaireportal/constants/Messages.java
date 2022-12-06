@@ -10,7 +10,7 @@ public interface Messages {
     String FIELD_ID_NOT_NULL = "Field id cannot be null";
     String FIELD_ID_NULL = "Field id must be null";
     String LABEL_NOT_EMPTY = "Label cannot be empty";
-    String LABEL_SIZE = "Max length of label is 255 characters";
+    String LABEL_SIZE = "Max length of label is 100 characters";
     String FIELD_TYPE_NOT_EMPTY = "Field type cannot be empty";
     String FIELD_TYPE_SIZE = "Max length of field type is 50 characters";
     String Q_ID_NOT_NULL = "Questionnaire id cannot be null";

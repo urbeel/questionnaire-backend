@@ -19,7 +19,7 @@ public class FieldDto {
     @Null(groups = {New.class}, message = Messages.FIELD_ID_NULL)
     private UUID id;
     @NotBlank(groups = {New.class, Update.class}, message = Messages.LABEL_NOT_EMPTY)
-    @Size(groups = {New.class, Update.class}, max = 255, message = Messages.LABEL_SIZE)
+    @Size(groups = {New.class, Update.class}, max = 100, message = Messages.LABEL_SIZE)
     private String label;
     @NotBlank(groups = {New.class, Update.class}, message = Messages.FIELD_TYPE_NOT_EMPTY)
     @Size(groups = {New.class, Update.class}, max = 50, message = Messages.FIELD_TYPE_SIZE)

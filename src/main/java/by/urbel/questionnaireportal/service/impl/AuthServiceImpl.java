@@ -115,7 +115,7 @@ public class AuthServiceImpl implements AuthService {
     private Map<String, Object> setRegistrationSuccessVariables(String firstname) {
         Map<String, Object> map = new HashMap<>();
         map.put("appLink", clientUrl);
-        map.put("recipientName", !firstname.isBlank() ? firstname : "User");
+        map.put("recipientName", firstname != null && !firstname.isBlank() ? firstname : "User");
         return map;
     }
 

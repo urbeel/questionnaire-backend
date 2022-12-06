@@ -17,6 +17,7 @@ import by.urbel.questionnaireportal.service.MailService;
 import by.urbel.questionnaireportal.service.exceptions.ChangePasswordException;
 import by.urbel.questionnaireportal.service.exceptions.EmailAlreadyUsedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,9 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
 
+    @Value(value = "${client.url}")
+    private String clientUrl;
+
     public void register(SignUpRequest signUpRequest) {
         User user = userMapper.signUpRequestToUser(signUpRequest);
         checkExistence(user);
@@ -44,7 +50,12 @@ public class AuthServiceImpl implements AuthService {
         questionnaire.setAuthor(user);
         user.setQuestionnaire(questionnaire);
         userRepository.save(user);
-        mailService.sendMessage(user.getEmail(), Mail.REGISTRATION_SUBJECT, Mail.REGISTRATION_MESSAGE);
+        mailService.sendMessage(
+                user.getEmail(),
+                Mail.REGISTRATION_SUBJECT,
+                Mail.REGISTRATION_TEMPLATE_NAME,
+                setRegistrationSuccessVariables(signUpRequest.getFirstname())
+        );
     }
 
     @Override
@@ -72,7 +83,12 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
             userRepository.save(user);
-            mailService.sendMessage(user.getEmail(), Mail.CHANGE_PASSWORD_SUBJECT, Mail.CHANGE_PASSWORD_MESSAGE);
+            mailService.sendMessage(
+                    user.getEmail(),
+                    Mail.CHANGE_PASSWORD_SUBJECT,
+                    Mail.CHANGE_PASSWORD_TEMPLATE_NAME,
+                    setChangedPasswordVariables()
+            );
         } else {
             throw new ChangePasswordException(Messages.PASSWORDS_MUST_BE_DIFFERENT);
         }
@@ -94,5 +110,18 @@ public class AuthServiceImpl implements AuthService {
             fullName.append(lastname);
         }
         return !fullName.isEmpty() ? fullName.toString().trim() : null;
+    }
+
+    private Map<String, Object> setRegistrationSuccessVariables(String firstname) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("appLink", clientUrl);
+        map.put("recipientName", !firstname.isBlank() ? firstname : "User");
+        return map;
+    }
+
+    private Map<String, Object> setChangedPasswordVariables() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("contactEmail", Mail.CONTACT_EMAIL);
+        return map;
     }
 }

@@ -1,12 +1,14 @@
 package by.urbel.questionnaireportal.constants;
 
 public interface Mail {
-    String REGISTRATION_MESSAGE =
-            "Thank you for registration! Now you can create your custom questionnaire.";
-    String CHANGE_PASSWORD_MESSAGE =
-            "Your password was changed.";
+    String REGISTRATION_TEMPLATE_NAME =
+            "success-registration.html";
+    String CHANGE_PASSWORD_TEMPLATE_NAME =
+            "success-password-change.html";
     String REGISTRATION_SUBJECT =
             "Successful registration";
     String CHANGE_PASSWORD_SUBJECT =
             "Changing your account password";
+
+    String CONTACT_EMAIL = "contact-urbel@gmail.com";
 }
